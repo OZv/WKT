@@ -35,5 +35,5 @@ https://pypi.python.org/pypi/requests/
                   -q	可选   压缩png图片，需要将pngquant.exe放在此脚本同一目录下
                   -v	可选   svg图片离线化，需要事先将此脚本生成的WKT/v目录下的所有svg图片转成同名的png图片，
                                推荐用Apache batik。若不设此参数则生成在线svg图片版mdx
-                  p	    可选   增量更新，不可与上述参数同时设置
+                  p	    可选   增量更新
                   [file]       设置参数p时必选，指定用于增量更新的词汇一览表的文件名，格式参考wordlist.txt`
