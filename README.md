@@ -4,8 +4,8 @@ http://www.pdawiki.com/forum/thread-18397-1-1.html
 ***  
 1. 词典内嵌js脚本
 --------------------
-* wk.js  
-联网发音及引证的显示隐藏等动态效果
+* wk.js 、WKT.css  
+联网发音及引证的显示隐藏等动态效果；CSS样式表
 2. 抓词脚本
 ----------------
 * wkt_downloader.py  
@@ -15,10 +15,10 @@ http://www.pdawiki.com/forum/thread-18397-1-1.html
 1. 安装python 2.7.6
 2. windows下要再安装python加载器，否则弹出一堆窗口很烦人  
 https://bitbucket.org/vinay.sajip/pylauncher/downloads/launcher.msi
-3. 安装requests
+3. 安装requests  
 https://pypi.python.org/pypi/requests/
 4. 将wordlist.txt和wkt_downloader.py脚本文件放在同一目录下，若无wordlist.txt将自动下载生成
-5. 配置下载进程数及每块的单词数，目前默认设为25个进程，每块8000个单词
+5. 配置下载进程数及每块的单词数，目前默认设为25个进程，每块8000个单词  
       如果要修改，找到wkt_downloader.py的如下两行：  
       
                   STEP = 8000        # 每块8000个单词
