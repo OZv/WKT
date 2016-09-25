@@ -1,0 +1,89 @@
+.wic, .b0f{font-family:"Lucida Grande","Open Sans","Lucida Sans Unicode","Segoe UI","sans-serif";font-size:100%;line-height:120%}
+.wic i, .wic cite{font-style:italic;font-family:"Georgia","Lucida Sans Unicode","Times","Times New Roman","serif"}
+.wic th i, .wic b i, .wic i b{font-weight:normal}
+.wic h1, .wic h3, .wic ul, .wic ol, .wic li, .wic dl, .wic dt, .wic dd, .wic p{font-style:normal;font-weight:normal;margin:0;padding:0;border:none;font-size:100%}
+.wic h3{margin:1em 0 .2em}
+.wic li{list-style:none}
+h1.bxr{margin:1em 0}
+.bxr+h3, .axr+h3, .ymp+h3, .ggs+h3, .ouf+h3, .wop+h3, .qfm+h3, h1.bxr:first-of-type, .xkn+h3{margin-top:0}
+.gec{font-size:120%;font-weight:bold;color:#1c4b8b}
+.bxr sup{position:relative;left:-4px}
+.wic a{text-decoration:none;color:navy}
+.wic a:hover{text-decoration:underline}
+.avj{height:16px;margin-left:1ex;cursor:pointer}
+ol.p3i, .rok ol, .fai ol{counter-reset:m}
+ol.sxw{counter-reset:n}
+ol.sxw ol.sxw{counter-reset:o}
+.rok li, .bkm li{position:relative;margin-left:.8em}
+ol.p3i li, .rok ol li, .fai ol li, .bkm li dl{position:relative;margin-left:1.3em}
+ol.sxw{margin-left:-1ex}
+ol.sxw ol.sxw{margin-left:-.8em}
+ol.sxw ol.sxw ol.sxw{margin-left:0}
+ol.p3i li+li, ol.sxw li+li, .ypu, .iqz, p.gdi, ul.zrb{margin-top:3px}
+p.gdi{font-size:85%}
+ol.p3i li:before, .rok ol li:before, .fai ol li:before{counter-increment:m;content:counter(m);position:absolute;left:-1.3em;color:#1c4b8b;font-family:Helvetica;font-weight:bold;letter-spacing:-1.5px}
+.fai ol li:before{content:counter(m)"."}
+ol.sxw li:before{counter-increment:n;content:counter(m)'.'counter(n);position:absolute;left:-2em;color:#f78e1e;font-size:85%;width:1.6em;font-family:"Arial Narrow","Arial";text-align:right;letter-spacing:0}
+ol.sxw ol.sxw li:before{counter-increment:o;content:counter(o,lower-alpha)".";color:#DA3433;font-family:Helvetica;font-weight:bold}
+ol.sxw ol.sxw ol.sxw li:before{counter-increment:o;content:counter(o)")";color:orangered}
+.fai ol.sxw li:before{content:counter(n)}
+.nyr, .aqj{color:#1c4b8b}
+.p3i dd, .ld7 dd, .wic dd .nyr{color:#369;font-family:Helvetica}
+.p3i dl dd{font-size:95%}
+.axr{font-family:Helvetica;color:#B8860B;font-size:80%;margin-top:1em}
+.m8r, .gbf, .saf{font-family:"Lucida Sans Unicode","Segoe UI","Arial Unicode MS";color:dimgray;white-space:nowrap}
+.wop, a.e5g, a.zwb, a.jjw, a.zwb .nyr, .axr dl, .axr p, .axr .nyr, .fai ol li:before{color:gray}
+.ymp, .ggs, .ouf, .wop, .qfm{float:right;clear:right;border:1px #CCC solid;margin:0 2px 1ex 1ex;padding:3px;font-family:Helvetica}
+.pdi .ymp{margin:3px auto;float:none}
+.eky .ymp{float:none;margin:1ex 0 0 0}
+.nwh{float:left;clear:left;margin:0 3px 3px}
+.dep{border:1px #CCC solid;text-align:center;margin:2px}
+.qfk, .ypu{margin-left:3px}
+.xkn{border:1px solid #CCC;clear:right;float:right;width:238px}
+.eol .exc{margin-top:1ex}
+.ypu, .nxn, .aty{display:none}
+.p3i dl dd.lxr{position:relative;margin-left:1em}
+.p3i dl dd.lxr:before{content:"\021D2\020";font-size:85%;color:#FF7E1E;position:absolute;left:-1.1em}
+.ypu, .eol .exc{border-left:3px #CCC solid;padding-left:1ex}
+.iqz, .oxq, .xxe, .ld7, .igj{color:dimgray;font-size:85%}
+.igj, .fvr .mwx{font-style:italic}
+.iqz dd, .ld7 dd, .ld7 .b0f, .w8x, .axr .m8r, .axr .gbf, .axr .nyr{display:inline;font-size:115%}
+.iqz, .ld7{font-family:Georgia}
+.ld7 .b0f{color:black}
+.oxq, .eol .exc, .rok, .igj, .aak em, .rkl, .qsp, .rrq, .fai, .pfp, .qfk, .x5o, .fvr .mwx, .o3c{font-family:Helvetica}
+.waq, .bss, p.hv7{background-color:#F0F0F0;border:1px solid #CCC;margin:1ex 0;padding:2px}
+.bss{background-color:#E0E0E0}
+.rkl, .bst, .fvr .mwx{color:teal}
+.qsp{color:#090}
+.jm4, .jm4 a{color:#A55858}
+p.aak, .rrq{display:inline;color:dimgray}
+.fvr li:before{content:"or\020"}
+.tsr{font-weight:bold;color:#E15A25;font-family:verdana;font-variant:small-caps}
+.vbz{color:sienna;font-family:"Trebuchet MS";font-weight:bold}
+.gph, .aeg{width:1em;position:relative;top:2px;cursor:pointer}
+.gph:hover, .aeg:hover{background-color:#EFF1F3}
+.ywp, .jlr, .qsj, .ory{float:right;width:13px;height:6px;cursor:pointer;position:relative;top:1px;padding:.3em .1em .3em .3em}
+.aeg, .jlr, .qsj{transform:scaleY(-1);-webkit-transform:scaleY(-1);filter:FlipV}
+.d0j{position:relative}
+.k76{position:absolute;top:50%;left:50%;width:70px;height:53px;margin-left:-45px;margin-top:-25px}
+.waq, p.hv7{border-style:dashed;font-size:85%}
+h3.t9d{margin:.5em 0 .2em;border-bottom:1px #CCC solid;clear:both}
+.bft li, .qvg li{display:inline-block;width:220px}
+.bft li, .msm li{position:relative;margin-left:.6em}
+.bft li:before, .msm li:before{content:counter(n,circle);font-size:80%;position:absolute;left:-.7em}
+li.bif{vertical-align:top;display:inline-block;margin-left:0}
+.exc, .qvg{clear:both}
+.rok li:before, .bkm li:before{content:counter(m,disc);position:absolute;left:-.8em;color:#1c4b8b}
+.rok ol li:before{color:dimgray;left:-1em}
+.qkx{float:right;padding:.3em .1em .3em .3em}
+ul.zrb, .nwh, .xkn, .fai, .ymp, .ggs, .ouf, .wop, .qfm, .wic table[align=right]{z-index:999;position:relative}
+.fai, .pfp, .x5o, .d3p, .o3c{margin:1ex 2px;border:1px solid #CCC;border-collapse:collapse;color:black;font-size:90%}
+.fai th, .pfp th, .x5o th{background-color:#f2f2f2;text-align:center}
+.fai th, .pfp th, .x5o th, .fai td, .pfp td, .x5o td, .d3p td, .o3c td{border:1px solid #CCC;padding:.2em .4em}
+.fai td span[style]{font-family:"sans-serif"}
+.tyr{border:0;border-spacing:0}
+.ifh:before{content:"\0B7"}
+.yaf{display:table-row}
+.z58{text-align:right;padding-right:2em}
+li.bif:before{content:none}
+.axr .e5g:after, .waq .e5g:after{content:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAXklEQVQoka2QwQ3AMAwCs1N28k7eiZ3oI7IcU6efBomXOREyxhUZ2brTdNAcVB2BaJgCVcDAalJLXsB+iLAjm1pAwzHWHD3gWMcMg/ERMjKfFOHVqMEGqEM/gKP/6gE2f+h+Z5P45wAAAABJRU5ErkJggg==");margin-left:2px}
