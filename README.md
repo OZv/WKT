@@ -30,10 +30,10 @@ https://pypi.python.org/pypi/requests/
 
       参数说明：
       
-                  f 	可选   仅排版转换，所有网页数据已经下载后可用
+                  f 	可选   仅排版，所有网页数据已经下载后可用
                   -l	可选   图片离线化，自动生成data目录。若不设此参数则生成在线图片版mdx
                   -q	可选   压缩png图片，需要将pngquant.exe放在此脚本同一目录下
-                  -v	可选   svg图片离线化，需要事先将此脚本生成的WKT/v目录下的所有svg图片转成同名的png图片，
-                               推荐用Apache batik。若不设此参数则生成在线svg图片版mdx
+                  -v	可选   svg图片替换为png图片（需要事先将此脚本生成的WKT/v目录下的所有svg图片转成同名的png图片，
+                               推荐用Apache batik）
                   p	    可选   增量更新
                   [file]       设置参数p时必选，指定用于增量更新的词汇一览表的文件名，格式参考wordlist.txt`
