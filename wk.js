@@ -34,7 +34,7 @@ for(var i=0;i<d.length;i++){
 bki(d[i],c,"ypu");
 }},
 w:function(c){
-var n = c.parentNode.parentNode.parentNode.nextSibling;
+var n = c.parentNode.parentNode.nextSibling;
 bki(n,c,"aty");
 },
 a:function(c,f){
