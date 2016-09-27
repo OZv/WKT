@@ -276,7 +276,7 @@ class downloader:
         self.clstbl, self.imgidx = OrderedDict(), OrderedDict()
         self.index, self.need_fix = Manager().dict(), OrderedDict()
         self.patch_keys, patch = self.load_patch(dir, words, logs)
-        pool, params = Pool(3), []
+        pool, params = Pool(2), []
         for i in xrange(1, times+1):
             params.append((self, ''.join([dir, '%d'%i, path.sep])))
         dics = pool.map(formatter, params)
@@ -420,7 +420,7 @@ class wkt_downloader(downloader):
         html = p.sub(r'\2', html)
         p = self.__rex(r'(\s*<br>\s*)*(<(?:/?(?:div|p)[^>]*|br)>)(\s*<br>\s*)*', re.I)
         html = p.sub(r'\2', html)
-        p = self.__rex(r'(?:\s|&#160;)*(<(?:/?(?:div|p|ul|ol|li)[^>]*|br)>)(?:\s|&#160;)*', re.I)
+        p = self.__rex(r'(?:\s|&#160;)*(<(?:/?(?:div|p|ul|ol|li|table|tr)[^>]*|br)>)(?:\s|&#160;)*', re.I)
         html = p.sub(r'\1', html)
         p = self.__rex(r'(?<=[^,])\s+(?=[,;\?]|\.(?:[^\d\.]|$))')
         html = p.sub(r'', html)
@@ -640,14 +640,14 @@ class wkt_downloader(downloader):
         return ''.join(thms), pt
 
     def __fix_tmb(self, m, before=False):
-        p = self.__rex(r'(<div class="(?:thumb (?:tright|tnone|tleft|tmulti tright)|floatright|tright|toc)"[^<>]*>.+?</div>)\s*(?=</ul|</li|<p|$)', re.I)
-        thms, ul = self.__cut_thm(p, m.group(0))
-        p = self.__rex(r'(<table class="floatright|metadata mbox-small"[^<>]+>.+?</table>)\s*(?=</ul|</li|<p|$)', re.I)
-        tbls, ul = self.__cut_thm(p, ul)
+        div = r'<div class="(?:thumb tleft|thumbinner|floatright|tright|toc)"[^<>]*>.+?</div>'
+        tbl = r'<table class="(?:floatright|toc|xkn|wikitable)[^<>]*>.+?</table>'
+        p = self.__rex(''.join([r'(', div, r'|', tbl, r')\s*(?=</?(?:[odu]l|li|dd|p>)|(?:</div>\s*)?(?:<h\d|$))']), re.I)
+        thms, blk = self.__cut_thm(p, m.group(0))
         if before:
-            return ''.join([''.join(thms), ''.join(tbls), ul])
+            return ''.join([''.join(thms), blk])
         else:
-            return ''.join([ul, ''.join(thms), ''.join(tbls)])
+            return ''.join([blk, ''.join(thms)])
 
     def __rm_psd(self, m):
         if m.group(1).find('</div>') < 0:
@@ -718,7 +718,7 @@ class wkt_downloader(downloader):
     def __fmt_swt(self, m):
         swt = self.__fix_links(m.group(1), False)
         if self.__rex(r'^show', re.I).search(swt):
-            p = self.__rex(r'(?=</li>\s*</ul>)', re.I)
+            p = self.__rex(r'(?=</li>)', re.I)
             swt = p.sub(r' <img src="q.png" onclick="kyw.w(this)" class="gph">', swt)
         return swt
 
@@ -782,12 +782,6 @@ class wkt_downloader(downloader):
         p = self.__rex(r'<a\b[^<>]*>\s*</a>', re.I)
         cp = p.sub(r'', cp)
         return ''.join(['<p class="gdi">', cp, '</p>'])
-
-    def __fmt_h1(self, m):
-        h1 = m.group(0)
-        p = self.__rex(r'(<div class="thumbinner"[^<>]*>.+?</div>)', re.I)
-        thms, h1 = self.__cut_thm(p, h1)
-        return ''.join([h1, thms])
 
     def __fmt_sa(self, blk):
         p = self.__rex(r'(?<=\()\s*<span class="ib-content">(.+?)</span>\s*(?=\))', re.I)
@@ -998,12 +992,23 @@ class wkt_downloader(downloader):
             src = ''.join([ORIGIN[:-6], src])
         return ''.join(['src="', src, '" ', st])
 
+    def __zom_svg(self, m, zoom):
+        lb, sf = m.group(1), m.group(2)
+        f = round(float(sf)*zoom, 2)
+        return ''.join([lb, str(f)])
+
     def __fmt_svg(self, m):
-        src, st = self.__shk_nm(m.group(2), m.group(2), '.png', 'v'), ''
-        p = self.__rex(r'(?<=[\s"])(style=")[^<>"]*?(vertical-align:[^<>"]+?);[^<>"]*?"', re.I)
-        n = p.search(''.join([m.group(1), m.group(3)]))
+        st = ''
+        if self.localize:
+            ext = '.png' if self.svg2png else ''
+            src, zoom = self.__shk_nm(m.group(3), m.group(3), ext, 'v'), 1.2
+        else:
+            src, zoom = m.group(2), 1
+        p = self.__rex(r'(?<=[\s"])(style="[^<>"]+")', re.I)
+        n = p.search(''.join([m.group(1), m.group(4)]))
         if n:
-            st = ''.join([n.group(1), n.group(2), '"'])
+            p = self.__rex(r'((?:width|height)\s*:)\s*(\.?\d+(?:\.\d*)?)(?=[^\d\.])', re.I)
+            st = p.sub(lambda o: self.__zom_svg(o, zoom), n.group(1))
         return ''.join(['src="', src, '" ', st])
 
     def __fmt_lbl(self, m):
@@ -1026,7 +1031,7 @@ class wkt_downloader(downloader):
         line = p.sub(r'', line)
         p = self.__rex(r'<div class="NavFrame" style="background:#FFB90F">\s*<div class="NavHead"[^<>]*>.+?</div>\s*<div class="NavContent"[^<>]*>.+?</div>\s*</div>', re.I)
         line = p.sub(r'', line)
-        p = self.__rex(r'<div class="(?:noprint|sister-(?:wiki\w+|project|species)|was-wotd floatright).+?</div>\s*(?=<h\d|<p|<table|<[odu]l|<li|<div class="thumb |$)', re.I)
+        p = self.__rex(r'<div class="(?:noprint|sister-(?:wiki\w+|project|species)|was-wotd floatright).+?</div>\s*(?=<h\d|<p|<table|<[odu]l|<li|<div class="(?:thumb|floatright|tright|toc)|$)', re.I)
         line = p.sub(r'', line)
         p = self.__rex(r'<tr>\s*<th[^<>]*>\s*<a\b[^<>]+>Picture dictionary</a>\s*</th>\s*</tr>', re.I)
         line = p.sub(r'', line)
@@ -1034,8 +1039,8 @@ class wkt_downloader(downloader):
         line = p.sub(r'', line)
         p = self.__rex(r'<table style="[^<>]*float:\s*right;[^<>]*">.+?</table>', re.I)
         line = p.sub(self.__rm_tbl, line)
-        p = self.__rex(r'(?<=<div )[^<>]*class="PopUpMediaTransform"[^<>]+>(.+?)(?=</div>)', re.I)
-        line = p.sub(r'class="d0j">\1', line)
+        p = self.__rex(r'(?<=<div )[^<>]*class="PopUpMediaTransform"[^<>]*?((?:style="[^<>"]+")?)[^<>]+>(.+?)(?=</div>)', re.I)
+        line = p.sub(r'class="d0j" \1>\2', line)
         p = self.__rex(r'<span class="mw-editsection">.+?(?=</h\d>)', re.I)
         line = p.sub(r'', line)
         p = self.__rex(r'<small class="editlink">.+?</small>|<sub class="preloadtext">.+?</sub>', re.I)
@@ -1050,12 +1055,6 @@ class wkt_downloader(downloader):
         line = p.sub(r'', line)
         p = self.__rex(r'<span class="interProject">(?:\s*<a\b[^<>]+>.*?</a>)?\s*</span>', re.I)
         line = p.sub(r'', line)
-        p = self.__rex(r'<div style="background-color:\s*#f0f0f0;">\s*<p>(.+?)</p>\s*</div>', re.I)
-        m = p.search(line)
-        line = p.sub(r'', line)
-        if m:
-            p = self.__rex(r'(?<=</h1>)', re.I)
-            line = p.sub(''.join(['<div class="waq">', self.__fix_links(m.group(1), False), '</div>']), line)
         p = self.__rex(r'(?<=</h1>)(.+?)(?=<h3>)', re.I)
         line = p.sub(self.__rm_sas, line)
         p = self.__rex(r'<table style="[^<>]*margin:\s*auto[^<>]*">.+?</table>', re.I)
@@ -1075,6 +1074,12 @@ class wkt_downloader(downloader):
         p = self.__rex(r'<div class="checksense">.+?</div>', re.I)
         line = p.sub(r'', line)
         p = self.__rex(r'(?<=<div class="vsShow")\s*style="display:none"(?=>)', re.I)
+        line = p.sub(r'', line)
+        p = self.__rex(r'<span class="metadata audiolinkinfo">.+?</span>', re.I)
+        line = p.sub(r'', line)
+        p = self.__rex(r'(?<=<table class=")metadata mbox-small"[^<>]*(?=>)', re.I)
+        line = p.sub(r'xkn"', line)
+        p = self.__rex(r'<td colspan="2" class="mbox-text".+?</td>', re.I)
         line = p.sub(r'', line)
         n = 1
         while n:
@@ -1097,16 +1102,13 @@ class wkt_downloader(downloader):
             line = ph.sub(self.__hd_no, line)
         p = self.__rex(r'<h([2-9])>\s*<span [^<>]+>[^<>]+</span>\s*</h\1>\s*(?=<h\d)', re.I)
         line = p.sub(r'', line)
-        p = self.__rex(r'(<h\d>\s*<span class="mw-headline" id="Etymology(?:_\w+)?">.+?)(?=<h\d)', re.I)
-        line = p.sub(lambda m: self.__fix_tmb(m, True), line)
-        p = self.__rex(r'(<ul>.+?</ul>)', re.I)
-        line = p.sub(self.__fix_tmb, line)
-        p = self.__rex(r'<div class="thumbcaption">\s*<div class="magnify">\s*<a [^<>]+>\s*</a>\s*</div>(.+?)\s*</div>', re.I)
+        p = self.__rex(r'<div class="thumbcaption"[^<>]*>\s*<div class="magnify">\s*<a [^<>]+>\s*</a>\s*</div>(.+?)\s*</div>', re.I)
         line = p.sub(self.__fmt_cp, line)
-        p = self.__rex(r'<div class="thumb tmulti tright">\s*(<div.+?</div>)\s*</div>\s*(?=<h\d|<p|<[odu]l|<table|<div class="thumb |$)', re.I)
-        line = p.sub(r'\1', line)
+        p = self.__rex(r'<div class="thumb tmulti tright">\s*(<div.+?</div>)\s*</div>\s*(?=<h\d|<p|<[odu]l|<table|<div class="(?:thumb|floatright|tright|toc)|$)', re.I)
+        q = self.__rex(r'<div class="thumbcaption"[^<>]*>\s*(.+?)\s*</div>', re.I)
+        line = p.sub(lambda m: q.sub(r'<p class="gdi">\1</p>', m.group(1)), line)
         p = self.__rex(r'<div class="thumb (?:tright|tnone)">\s*(<div.+?</div>)\s*</div>', re.I)
-        q = self.__rex(r'<div class="thumbcaption">\s*(<p>.+?</p>)\s*</div>', re.I)
+        q = self.__rex(r'<div class="thumbcaption"[^<>]*>\s*(<p>.+?</p>)\s*</div>', re.I)
         line = p.sub(lambda m: q.sub(r'\1', m.group(1)), line)
         p = self.__rex(r'(<a\b[^<>]+>)\s*<span class="play-btn-large">.+?</span>\s*(?=</a>)', re.I)
         line = p.sub(r'\1<img src="pl.png" class="k76">', line)
@@ -1126,18 +1128,15 @@ class wkt_downloader(downloader):
         line = p.sub(r'm8r">', line)
         p = self.__rex(r'(?<=<span )title="X-SAMPA[^<>]*><tt class="SAMPA">([^<>]+)</tt>(?=</span>)', re.I)
         line = p.sub(r'class="m8r">\1', line)
-        p = self.__rex(r'<span class="metadata audiolinkinfo">.+?</span>', re.I)
-        line = p.sub(r'', line)
-        p = self.__rex(r'(?<=<table class=")metadata mbox-small"[^<>]*(?=>)', re.I)
-        line = p.sub(r'xkn"', line)
-        p = self.__rex(r'<td colspan="2" class="mbox-text".+?</td>', re.I)
-        line = p.sub(r'', line)
         ens = line.split('</h1>')
-        p = self.__rex(r'<table class="audiotable".+?</table>', re.I)
+        p = self.__rex(r'<table class="audiotable".+?</table>\s*,?', re.I)
         q = self.__rex(r'<source [^<>]*src="([^<>"]+)\.ogg"', re.I)
         r = self.__rex(r'^//upload\.wikimedia\.org/wikipedia/commons/', re.I)
-        pp = self.__rex(r'(<h\d>\s*<span class="mw-headline" id="Pronunciation.+?(?:</(?:ul|p|table|dl)>|<div class="NavFrame">.+?</div>))(?=\s*(?:<h\d|<div class="thumb|<table(?! class="audiotable")))', re.I)
-        ps = self.__rex(r'(<h\d>\s*<span class="mw-headline" id="Alternat.+?)(?=<h\d\b|<div class="(?:thumbinner|toc)"|<table class="floatright")', re.I)
+        pc = self.__rex(r'(?=<h\d)', re.I)
+        pm = self.__rex(r'^(.+?)(?=<h\d>\s*<span class="mw-headline" id="(?!Pronunciation|Alternat|Etymology))', re.I)
+        pn = self.__rex(r'<div style="background-color:\s*#f0f0f0;">\s*<p>(.+?)</p>\s*</div>', re.I)
+        pp = self.__rex(r'(<h\d>\s*<span class="mw-headline" id="Pronunciation.+?)(?=<h\d\b)', re.I)
+        ps = self.__rex(r'(<h\d>\s*<span class="mw-headline" id="Alternat.+?)(?=<h\d\b)', re.I)
         pt = self.__rex(r'<table\b', re.I)
         pu = self.__rex(r'</?ul[^<>]*>', re.I)
         for i in xrange(0, len(ens)):
@@ -1154,7 +1153,12 @@ class wkt_downloader(downloader):
             m = pp.search(ens[i])
             if m:
                 ens[i] = pp.sub(r'', ens[i])
-                ens[i] = ''.join([self.__fmt_pron(pu.sub('', m.group(1))), ens[i]])
+                ens[i] = pc.sub(self.__fmt_pron(pu.sub('', m.group(1))), ens[i], 1)
+            ens[i] = pm.sub(lambda m: self.__fix_tmb(m, True), ens[i])
+            m = pn.search(ens[i])
+            ens[i] = pn.sub(r'', ens[i])
+            if m:
+                ens[i] = ''.join(['<div class="waq">', self.__fix_links(m.group(1), False), '</div>', ens[i]])
             m = ps.search(ens[i])
             if m and not pt.search(m.group(1)):
                 ens[i] = ps.sub(r'', ens[i])
@@ -1162,8 +1166,8 @@ class wkt_downloader(downloader):
                 pa = self.__rex(r'<h(\d)>\s*<span class="mw-headline" id="Alternat[^<>]+">[^<>]+</span>\s*</h\1>', re.I)
                 ens[i-1] = pa.sub(r'', ens[i-1])
         line = p.sub(r'', '</h1>'.join(ens))
-        p = self.__rex(r'<h1\b[^<>]*>.+?<h1>', re.I)
-        line = p.sub(self.__fmt_h1, line)
+        p = self.__rex(r'(<([du]l)>.+?</\2>)', re.I)
+        line = p.sub(self.__fix_tmb, line)
         p = self.__rex(r'<h(\d)>\s*<span class="mw-headline" id="Pronunciation(?:[^<>]+)?">[^<>]+</span>\s*</h\1>', re.I)
         line = p.sub(r'', line)
         p = self.__rex(r'(<h\d>\s*<span class="mw-headline" id="Etymology[^<>]+>[^<>]+</span>)\s*(</h\d>)(.+?)(?=<h\d\b)', re.I)
@@ -1183,7 +1187,7 @@ class wkt_downloader(downloader):
         p = self.__rex(r'(<h\d>\s*<span class="mw-headline"[^<>]+>[^<>]+</span>)\s*(</h\d>)(.+?)(?=<h\d\b|$)', re.I)
         line = p.sub(self.__fmt_blk, line)
         for id in ['Etymology', 'Alternat']:
-            p = self.__rex(''.join([r'(<h\d[^<>]*>\s*<span class="mw-headline" id="', id, '.+?)((?:<h[3-9]>|<div class="thumbinner"|<table class="(?:floatright|toc)").+?)(?=<h\d class="t9d">|<h1|$)']), re.I)
+            p = self.__rex(''.join([r'(<h\d[^<>]*>\s*<span class="mw-headline" id="', id, '.+?)(<h[3-9]>.+?)(?=<h\d class="t9d">|<h1|$)']), re.I)
             line = p.sub(r'\2\1', line)
         p = self.__rex(r'(?<=\(<span class=")ib-content(">)<span class="qualifier-content">(.+?)</span>(?=</span>\))', re.I)
         line = p.sub(r'mwx\1\2', line)
@@ -1210,9 +1214,8 @@ class wkt_downloader(downloader):
         line = p.sub(lambda m: self.__fmt_htb(m.group(1)), line)
         p = self.__rex(r'(?<=<img )([^<>]*)src="((?://|/w/extensions/)[^<>"]+?")([^<>]*)(?=>)', re.I)
         line = p.sub(lambda m: self.__fmt_img(m), line)
-        if self.svg2png and self.localize:
-            p = self.__rex(r'(?<=<img )([^<>]*)src="https?://[^<>"]+?/svg/([^<>"/]+)"([^<>]*)(?=>)', re.I)
-            line = p.sub(lambda m: self.__fmt_svg(m), line)
+        p = self.__rex(r'(?<=<img )([^<>]*)src="(https?://[^<>"]+?/svg/([^<>"/]+))"([^<>]*)(?=>)', re.I)
+        line = p.sub(lambda m: self.__fmt_svg(m), line)
         p = self.__rex(r'(<source [^<>]*src=")(?=//)', re.I)
         line = p.sub(r'\1https:', line)
         line = self.__rex(r'(?=<h1)').sub(''.join([r'<a href="', ORIGIN, urllib.quote(key.replace(' ', '_')),
@@ -1240,7 +1243,7 @@ class wkt_downloader(downloader):
         line = self.cleansp(line)
         n = 1
         while n:
-            line, n = self.__rex(r'<(div|li|[du]l|p)\b[^<>]*>\s*</\1>|<td style="border-style:none"></td>', re.I).subn(r'', line)
+            line, n = self.__rex(r'<(div|li|[du]l|p|dd)\b[^<>]*>\s*</\1>|<td style="border-style:none"></td>', re.I).subn(r'', line)
         js = '<script type="text/javascript"src="wk.js"></script>' if line.find('onclick=')>-1 else ''
         line = ''.join(['<link rel="stylesheet"href="', self.DIC_T, '.css"type="text/css"><div class="wic">', line, js, '</div>'])
         if _DEBUG_:
@@ -1336,7 +1339,7 @@ if __name__=="__main__":
     argpsr.add_argument("file", nargs="?", help="[file name] To specify additional wordlist when diff is [p]")
     argpsr.add_argument("-l", "--local", help="To localize image files", action="store_true")
     argpsr.add_argument("-q", "--pngquant", help="To shrink *.png files", action="store_true")
-    argpsr.add_argument("-v", "--svg2png", help="To convert *.svg to *.png", action="store_true")
+    argpsr.add_argument("-v", "--svg2png", help="To replace *.svg with *.png", action="store_true")
     args = argpsr.parse_args()
     print "Start at %s" % datetime.now()
     wkt_dl = wkt_downloader()
