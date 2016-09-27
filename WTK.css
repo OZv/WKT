@@ -1,5 +1,5 @@
 .wic, .b0f{font-family:"Lucida Grande","Open Sans","Lucida Sans Unicode","Segoe UI","sans-serif";font-size:100%;line-height:120%}
-.wic i, .wic cite{font-style:italic;font-family:"Georgia","Lucida Sans Unicode","Times","Times New Roman","serif"}
+.wic i, .wic cite{font-style:italic;font-family:"Georgia","Lucida Sans Unicode","Segoe UI","Times","Times New Roman","serif"}
 .wic th i, .wic b i, .wic i b{font-weight:normal}
 .wic h1, .wic h3, .wic ul, .wic ol, .wic li, .wic dl, .wic dt, .wic dd, .wic p{font-style:normal;font-weight:normal;margin:0;padding:0;border:none;font-size:100%}
 .wic h3{margin:1em 0 .2em}
@@ -32,14 +32,14 @@ ol.sxw ol.sxw ol.sxw li:before{counter-increment:o;content:counter(o)")";color:o
 .p3i dl dd{font-size:95%}
 .axr{font-family:Helvetica;color:#B8860B;font-size:80%;margin-top:1em}
 .m8r, .gbf, .saf{font-family:"Lucida Sans Unicode","Segoe UI","Arial Unicode MS";color:dimgray;white-space:nowrap}
-.wop, a.e5g, a.zwb, a.jjw, a.zwb .nyr, .axr dl, .axr p, .axr .nyr, .fai ol li:before{color:gray}
-.ymp, .ggs, .ouf, .wop, .qfm{float:right;clear:right;border:1px #CCC solid;margin:0 2px 1ex 1ex;padding:3px;font-family:Helvetica}
+.wop, a.e5g, a.zwb, a.jjw, a.zwb .nyr, .axr dl, .axr .nyr, .fai ol li:before{color:gray}
+.ymp, .ggs, .ouf, .wop, .qfm, .xkn{float:right;clear:right;border:1px #CCC solid;margin:0 2px 1ex 1ex;padding:3px;font-family:Helvetica}
 .pdi .ymp{margin:3px auto;float:none}
 .eky .ymp{float:none;margin:1ex 0 0 0}
 .nwh{float:left;clear:left;margin:0 3px 3px}
 .dep{border:1px #CCC solid;text-align:center;margin:2px}
 .qfk, .ypu{margin-left:3px}
-.xkn{border:1px solid #CCC;clear:right;float:right;width:238px}
+.xkn{width:238px}
 .eol .exc{margin-top:1ex}
 .ypu, .nxn, .aty{display:none}
 .p3i dl dd.lxr{position:relative;margin-left:1em}
@@ -65,7 +65,7 @@ p.aak, .rrq{display:inline;color:dimgray}
 .ywp, .jlr, .qsj, .ory{float:right;width:13px;height:6px;cursor:pointer;position:relative;top:1px;padding:.3em .1em .3em .3em}
 .aeg, .jlr, .qsj{transform:scaleY(-1);-webkit-transform:scaleY(-1);filter:FlipV}
 .d0j{position:relative}
-.k76{position:absolute;top:50%;left:50%;width:70px;height:53px;margin-left:-45px;margin-top:-25px}
+.k76{position:absolute;top:50%;left:50%;width:70px;height:53px;margin-left:-35px;margin-top:-25px}
 .waq, p.hv7{border-style:dashed;font-size:85%}
 h3.t9d{margin:.5em 0 .2em;border-bottom:1px #CCC solid;clear:both}
 .bft li, .qvg li{display:inline-block;width:220px}
