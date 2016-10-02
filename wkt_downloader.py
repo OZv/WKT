@@ -938,7 +938,7 @@ class wkt_downloader(downloader):
 
     def __shk_nm(self, src, filename, ext, dest):
         name = self.__fix_nm(src, filename)
-        of = fullpath(''.join([self.DIC_T, path.sep, dest, path.sep, name, ext]))
+        of = fullpath(''.join([self.DIC_T, path.sep, dest, path.sep, name, '' if ext=='.svg' else ext]))
         if not path.exists(of):
             print self.key, ":", of, "not found"
         nm = urllib.unquote(name)
@@ -1000,7 +1000,7 @@ class wkt_downloader(downloader):
     def __fmt_svg(self, m):
         st = ''
         if self.localize:
-            ext = '.png' if self.svg2png else ''
+            ext = '.png' if self.svg2png else '.svg'
             src, zoom = self.__shk_nm(m.group(3), m.group(3), ext, 'v'), 1.2
         else:
             src, zoom = m.group(2), 1
